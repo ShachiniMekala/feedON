@@ -28,25 +28,32 @@ exports.sugRegister = async (req, res) => {
     }
 }
 
-exports.sugClose = async (req, res) => {
+exports.sugClose = (req, res) => {
 
-   Sug.update({ _id: req.body.id }, { $set: { 'status': false } }).then(result => {
-        Sug.count({ user_id: req.body.user_id, status: false }).then(records =>{
+    Sug.updateOne({ _id: req.body.id }, { $set: { 'status': false } }).then(result => {
+        Sug.countDocuments({ user_id: req.body.user_id, status: false }).then(records => {
             //console.log(`${records}`+' documents match the specified query.');
-            if(records>5){
-                console.log("limit reacheddddddddddd");
-                //Sug.remove({query :{user_id: req.body.user_id, status: false}, sort: {"date" :1}, remove:true});
+            if (records > 5) {
+                //console.log(records);
+                //console.log("limit reacheddddddddddd");
+                //Sug.deleteOne({query :{user_id: req.body.user_id, status: false}, sort: {"date" :1}})
+                Sug.findOneAndDelete({ user_id: req.body.user_id, status: false }, { sort: { "date": 1 } }).then(ok => {
+                    //console.log(ok);
+                    res.status(200).send('successfully updated');
+                }).catch(err => {
+                    res.status(402).send(err);
+                });;
+
+            }
+            else {
                 res.status(200).send('successfully updated');
             }
-          }
-           
-            ).catch(err => {
-                console.error("Failed to count documents: ", err)
-            });
-            res.status(200).console.log('successfully updated');
-        }).catch(err=>{
-            res.status(400).send(err);
+        }).catch(err => {
+            res.status(401).send(err);//count error
         });
+    }).catch(err => {
+        res.status(400).send(err);
+    });
 
 }
 
