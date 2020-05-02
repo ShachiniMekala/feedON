@@ -25,4 +25,4 @@ app.use('/api/vote',voteRoute);
 
 
 
-app.listen(process.env.PORT,()=>console.log('Server up and running'))
+http.listen(process.env.PORT,()=>console.log('Server up and running'))
