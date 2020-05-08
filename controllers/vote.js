@@ -3,7 +3,7 @@ const Sug = require('../models/suggestion');
 exports.sugView = async (req, res) => {
     try {
         Sug.find({ status: true, code: req.body.code }, {}).then(allSug => {
-            console.log('helooooooooooooooooo' + allSug);
+           // console.log('helooooooooooooooooo' + allSug);
             if (allSug == '') {
                 res.status(401).send('Suggestion not found');
             }
@@ -36,7 +36,7 @@ exports.castingVote = (req, res) => {
                                 });
                                 break;
                             } catch (error) {
-                                res.status(402).send(error);
+                                res.status(406).send(error);
                             }
                         }
                     }
@@ -45,7 +45,7 @@ exports.castingVote = (req, res) => {
                     Sug.updateOne({ _id: req.body.id }, { $push: { comments: req.body.comment } }).then(res3 => {
                         res.status(200).send('Sucessfully Updated');
                     }).catch(err => {
-                        res.status(403).send(err);
+                        res.status(405).send(err);
                     });
                 }
                 else {//has comment and option
@@ -60,7 +60,7 @@ exports.castingVote = (req, res) => {
                                         Sug.updateOne({ _id: req.body.id }, { $push: { comments: req.body.comment } }).then(res3 => {
                                             res.status(200).send('Sucessfully Updated');
                                         }).catch(err => {
-                                            res.status(403).send(err);
+                                            res.status(404).send(err);
                                         });
 
 
@@ -69,7 +69,7 @@ exports.castingVote = (req, res) => {
                                 });
                                 break;
                             } catch (error) {
-                                res.status(402).send(error);
+                                res.status(403).send(error);
                             }
                         }
                     }
@@ -78,7 +78,7 @@ exports.castingVote = (req, res) => {
 
             }
             else {
-                res.status(405).send('Session Already Closed');
+                res.status(402).send('Session Already Closed');
 
             }
 

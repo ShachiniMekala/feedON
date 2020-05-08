@@ -19,6 +19,15 @@ password:{
     min:8,
     max:255
 },
+OTP:{
+    type:String,
+    default:null
+},
+expiresIn:{
+    type:Date,
+    required:true,
+    default:Date.now
+},
 date:{
     type:Date,
     default:Date.now

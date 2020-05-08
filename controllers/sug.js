@@ -12,7 +12,9 @@ exports.sugRegister = async (req, res) => {
         status: true,
         code: generator.generate({
             length: 5,
-            numbers: true
+            numbers: true,
+            lowercase:true,
+            uppercase:true
         }),
         option: optionName,
         total: 0
