@@ -2,25 +2,25 @@ const Sug = require('../models/suggestion');
 
 exports.sugView = async (req, res) => {
     try {
-        Sug.find({ status: true, code: req.body.code }, {}).then(allSug => {
-           // console.log('helooooooooooooooooo' + allSug);
-            if (allSug == '') {
-                res.status(401).send('Suggestion not found');
-            }
-            else {
-                res.status(200).send(allSug);
-            }
+    
+        Sug.findOne({code: req.body.code }).then(allSug => {
+            //console.log('helooooooooooooooooo' + allSug.status);
+            
+            if(allSug.status==false) return res.status(402).send('Session Already Closed');
+            
+            return res.status(200).send(allSug);
+        }).catch(err=>{
+            return res.status(403).send('Suggestion not found');
         });
     } catch (err) {
-        res.status(400).send(err);
+        return res.status(400).send(err);
     }
 }
 
 exports.castingVote = (req, res) => {
     try {
-        var votedSug = '';
-        Sug.findOne({ _id: req.body.id }).then(voted => {
-            votedSug = voted;
+
+        Sug.findOne({ _id: req.body.id }).then(votedSug => {
             if (votedSug.status == true) {
                 if (!!req.body.selectedOption && !req.body.comment) {  //option has no comment
                     for (var i = 0; i < votedSug.option.length; i++) {

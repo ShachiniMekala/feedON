@@ -24,9 +24,9 @@ exports.signUp = async (req, res) => {
     });
 
     try {
-        console.log('Registering');
+        //console.log('Registering');
         const savedUser = await user.save();
-        console.log('Registered');
+        //console.log('Registered');
         res.send(savedUser);
     } catch (err) {
         res.status(400).send(err);
@@ -93,20 +93,22 @@ exports.forgotPassword = async (req, res) => {
         }
     });
 
-    console.log(password);
+    //console.log(password);
 
     // send mail with defined transport object
     let mailOption = {
         from: process.env.EMAIL, // sender address
         to: userExists.email, // list of receivers
-        subject: "feedON Password Reset", // Subject line
+        subject: "feedON OTP for login", // Subject line
         text: "Hello Email",
         html: `<body>
     <div>
         <h3>Hello ${userExists.name},</h3>
-        <p>You requested for an one time password, kindly use the following OTP :<br> <h2 style="text-align:center">${password}</h2></p>
+        <h3 style="text-align:center">❤ Thank you for using feedON ! ❤</h3>
+        <p>You have requested for an one time password (OTP). Your OTP is below :<br> <h2 style="text-align:center"><mark>${password}</mark></h2></p>
         <br>
-        <p>Cheers!</p>
+        <p>Cheers ‼</p>
+        <p>-feedON team-</p>
     </div>
    
 </body>`
@@ -116,12 +118,12 @@ exports.forgotPassword = async (req, res) => {
         if (err) return res.status(400).send(err);
 
         // console.log('Email Sent');
-        User.updateOne({ email: req.body.email }, { $set: { 'OTP': OTP, 'expiresIn': expiresIn } }).then(res => {
-            console.log('User updated');
+        User.updateOne({ email: req.body.email }, { $set: { 'OTP': OTP, 'expiresIn': expiresIn } }).then(result => {
+            return res.status(200).send('Email sent! Check your email');
         }).catch(err => {
-            console.log(err);
+            return res.status(400).send(err);
         });
-        return res.status(200).send('Email sent! Check your email');
+        
 
 
     });
