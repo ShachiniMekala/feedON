@@ -1,31 +1,32 @@
-const express=require('express');
-const app=express();
-const dotenv = require('dotenv');
-const http = require('http').createServer(app);
-const mongoose = require('mongoose');
-const socketio = require('socket.io')(http);
-
+const express = require("express");
+const app = express();
+const dotenv = require("dotenv");
+const http = require("http").createServer(app);
+const mongoose = require("mongoose");
+const socketio = require("socket.io")(http);
 
 dotenv.config();
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log('connected successfully'));
+mongoose.connect(
+  process.env.DB_CONNECT,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => console.log("connected successfully")
+);
 
 // socket.on('connection', (socket) => {
 //     console.log('a user connected');
 //   });
 
-const authRoute = require('./routes/auth');
-const sugRoute= require('./routes/sug');
-const voteRoute=require('./routes/vote');
+const authRoute = require("./routes/auth");
+const sugRoute = require("./routes/sug");
+const voteRoute = require("./routes/vote");
 
 app.use(express.json());
 
-app.use('/api/auth',authRoute);
-app.use('/api/sug',sugRoute);
-app.use('/api/vote',voteRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/sug", sugRoute);
+app.use("/api/vote", voteRoute);
 
-
-
-http.listen(process.env.PORT,()=>console.log('Server up and running'))
+http.listen(process.env.PORT, () => console.log("Server up and running"));
 
 // io.on("connection", (socket) => {
 //   socket.on("recieve_message", (data) => {
@@ -40,6 +41,8 @@ socketio.on("connection", (userSocket) => {
   console.log("new device connected");
   userSocket.on("send_message", (data) => {
     console.log(data["message"]);
-    userSocket.broadcast.emit("receive_message", data);
+    var total = 10;
+    var msg = "all fine";
+    userSocket.emit("receive_message", data);
   });
 });
