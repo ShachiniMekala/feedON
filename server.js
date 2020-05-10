@@ -43,6 +43,6 @@ socketio.on("connection", (userSocket) => {
     console.log(data["message"]);
     var total = 10;
     var msg = "all fine";
-    userSocket.emit("receive_message", data);
+    userSocket.broadcast.emit("receive_message", data);
   });
 });
