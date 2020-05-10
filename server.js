@@ -9,9 +9,9 @@ const socketio = require('socket.io')(http);
 dotenv.config();
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log('connected successfully'));
 
-socket.on('connection', (socket) => {
-    console.log('a user connected');
-  });
+// socket.on('connection', (socket) => {
+//     console.log('a user connected');
+//   });
 
 const authRoute = require('./routes/auth');
 const sugRoute= require('./routes/sug');
