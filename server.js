@@ -29,10 +29,10 @@ http.listen(process.env.PORT,()=>console.log('Server up and running'))
 
 var casting = io.of("/");
 casting.on("connection", (socket) => {
-  io.on("recieve_message", (data) => {
+  socket.on("recieve_message", (data) => {
     console.log(data.option_id);
     var total=10;
     var result="All are fine";
-    io.emit("send_message",{total,result});
+    socket.broadcast.emit("send_message",{total,result});
   })
 });
