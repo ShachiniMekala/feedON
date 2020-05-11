@@ -3,7 +3,7 @@ const app=express();
 const dotenv = require('dotenv');
 const http = require('http').createServer(app);
 const mongoose = require('mongoose');
-const socket = require('socket.io')(http);
+const io = require('socket.io')(http);
 
 
 dotenv.config();
@@ -29,10 +29,10 @@ http.listen(process.env.PORT,()=>console.log('Server up and running'))
 
 var casting = io.of("/");
 casting.on("connection", (socket) => {
-  socket.on("recieve_message", (data) => {
+  io.on("recieve_message", (data) => {
     console.log(data.option_id);
     var total=10;
     var result="All are fine";
-    socket.emit("send_message",{total,result});
+    io.emit("send_message",{total,result});
   })
 });
