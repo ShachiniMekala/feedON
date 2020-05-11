@@ -26,3 +26,13 @@ app.use('/api/vote',voteRoute);
 
 
 http.listen(process.env.PORT,()=>console.log('Server up and running'))
+
+var casting = io.of("/");
+casting.on("connection", (socket) => {
+  socket.on("recieve_message", (data) => {
+    console.log(data.option_id);
+    var total=10;
+    var result="All are fine";
+    socket.emit("send_message",{total,result});
+  })
+});
