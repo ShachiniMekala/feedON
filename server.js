@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const http = require("http").createServer(app);
 const mongoose = require("mongoose");
 const socketio = require("socket.io")(http);
+const vote=require('./controllers/vote');
 
 dotenv.config();
 mongoose.connect(
@@ -39,10 +40,18 @@ http.listen(process.env.PORT, () => console.log("Server up and running"));
 
 socketio.on("connection", (userSocket) => {
   console.log("new device connected");
-  userSocket.on("send_message", (data) => {
-    console.log(data["message"]);
-    var total = 10;
-    var msg = "all fine";
-    userSocket.broadcast.emit("receive_message", data);
+  userSocket.on("casted", (data) => {
+    //console.log(data["message"]);
+    vote.castingVote(data,callback).then(ok=>{
+      if(ok){
+        userSocket.broadcast.emit("updated_data",ok);
+      }
+      else{
+        console.log('Something went wrong!');
+      }
+    }).catch(err=>{
+      console.log(err);
+    }
+    );
   });
 });

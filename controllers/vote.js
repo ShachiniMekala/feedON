@@ -19,57 +19,62 @@ exports.sugView = async (req, res) => {
 
 exports.castingVote = (req, res) => {
     try {
-
-        Sug.findOne({ _id: req.body.id }).then(votedSug => {
+        var sugID=req["sug_id"];
+        var option_ID=req["option_id"];
+        var comment=req["comment"];
+        Sug.findOne({ _id:sugID }).then(votedSug => {
             if (votedSug.status == true) {
-                if (!!req.body.selectedOption && !req.body.comment) {  //option has no comment
+                if (!!option_ID && !comment) {  //option has no comment
                     for (var i = 0; i < votedSug.option.length; i++) {
-                        if (req.body.selectedOption == votedSug.option[i]._id) {
+                        if (option_ID == votedSug.option[i]._id) {
                             votedSug.option[i].count++;
                             votedSug.total++;
                             try {
-                                Sug.updateOne({ _id: req.body.id, "option._id": req.body.selectedOption }, { $set: { 'option.$.count': votedSug.option[i].count } }).then(result1 => {
-                                    Sug.updateOne({ _id: req.body.id }, { $set: { "total": votedSug.total } }).then(result2 => {
-                                        res.status(200).send('Sucessfully Updated');
+                                Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $set: { 'option.$.count': votedSug.option[i].count } }).then(result1 => {
+                                    Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
+                                        return res.status(200).send(result2);
                                     });
 
                                 });
-                                break;
                             } catch (error) {
-                                res.status(406).send(error);
+                                res(false);
+                                return;
                             }
                         }
                     }
                 }
-                else if (!req.body.selectedOption && !!req.body.comment) {//has comment no option
-                    Sug.updateOne({ _id: req.body.id }, { $push: { comments: req.body.comment } }).then(res3 => {
-                        res.status(200).send('Sucessfully Updated');
+                else if (!option_ID && !!comment) {//has comment no option
+                    Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
+                        return res.status(200).send(res3);
                     }).catch(err => {
-                        res.status(405).send(err);
+                        res(false);
+                        return;
                     });
                 }
                 else {//has comment and option
                     for (var i = 0; i < votedSug.option.length; i++) {
-                        if (req.body.selectedOption == votedSug.option[i]._id) {
+                        if (option_ID == votedSug.option[i]._id) {
                             votedSug.option[i].count++;
                             votedSug.total++;
                             try {
-                                Sug.updateOne({ _id: req.body.id, "option._id": req.body.selectedOption }, { $set: { 'option.$.count': votedSug.option[i].count } }).then(result1 => {
-                                    Sug.updateOne({ _id: req.body.id }, { $set: { "total": votedSug.total } }).then(result2 => {
+                                Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $set: { 'option.$.count': votedSug.option[i].count } }).then(result1 => {
+                                    Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
 
-                                        Sug.updateOne({ _id: req.body.id }, { $push: { comments: req.body.comment } }).then(res3 => {
-                                            res.status(200).send('Sucessfully Updated');
+                                        Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
+                                            return res.status(200).send(res3);
                                         }).catch(err => {
-                                            res.status(404).send(err);
+                                            res(false);
+                                            return;
                                         });
 
 
                                     });
 
                                 });
-                                break;
+            
                             } catch (error) {
-                                res.status(403).send(error);
+                                res(false);
+                                return;
                             }
                         }
                     }
@@ -78,17 +83,20 @@ exports.castingVote = (req, res) => {
 
             }
             else {
-                res.status(402).send('Session Already Closed');
+                res(false);
+                return;
 
             }
 
         }).catch(err => {
-            res.status(401).send(err);
+            res(false);
+            return;
         });
 
 
     } catch (error) {
-        res.status(400).send(error);
+        res(false);
+        return;
     }
 
 }
