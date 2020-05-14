@@ -36,27 +36,27 @@ exports.castingVote = (req, res) => {
                             try {
                                 Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $set: { 'option.$.count': votedSug.option[i].count } }).then(result1 => {
                                     Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
-                                        console.log(result2);
-                                        return res.status(200).send(result2);
+                                        //console.log(result2);
+                                        return res(result2);
                                     });
 
                                 });
                             } catch (error) {
-                                console.log(error);
-                                res(false);
-                                return;
+                                //console.log(error);
+                                return res(false);
+                                
                             }
                         }
                     }
                 }
                 else if (!option_ID && !!comment) {//has comment no option
                     Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
-                        console.log(res3);
-                        return res.status(200).send(res3);
+                        //console.log(res3);
+                        return res(res3);
                     }).catch(err => {
-                        console.log(err);
-                        res(false);
-                        return;
+                        // console.log(err);
+                        return res(false);
+                        
                     });
                 }
                 else {//has comment and option
@@ -69,12 +69,12 @@ exports.castingVote = (req, res) => {
                                     Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
 
                                         Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
-                                            console.log(res3)
+                                            // console.log(res3)
                                             return res(res3);
                                         }).catch(err => {
-                                            console.log(err);
-                                            res(false);
-                                            return;
+                                            // console.log(err);
+                                            return res(false);
+                                           
                                         });
 
 
@@ -83,9 +83,9 @@ exports.castingVote = (req, res) => {
                                 });
             
                             } catch (error) {
-                                console.log(error);
-                                res(false);
-                                return;
+                                //console.log(error);
+                                return res(false);
+                               
                             }
                         }
                     }
@@ -94,23 +94,22 @@ exports.castingVote = (req, res) => {
 
             }
             else {
-                console.log('Unknown else');
-                res(false);
-                return;
+                // console.log('Unknown else');
+                return res(false);
+        
 
             }
 
         }).catch(err => {
-            console.log(err);
-            res(false);
-            return;
+            // console.log(err);
+            return res(false);
         });
 
 
     } catch (error) {
-        console.log(error);
-        res(false);
-        return;
+        // console.log(error);
+        return res(false);
+        
     }
 
 }
