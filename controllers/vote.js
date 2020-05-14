@@ -70,7 +70,7 @@ exports.castingVote = (req, res) => {
 
                                         Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
                                             console.log(res3)
-                                            return res.send(res3);
+                                            return res(res3);
                                         }).catch(err => {
                                             console.log(err);
                                             res(false);
