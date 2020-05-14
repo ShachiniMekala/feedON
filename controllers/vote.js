@@ -19,9 +19,9 @@ exports.sugView = async (req, res) => {
 
 exports.castingVote = (req, res) => {
     try {
-        var sugID=req["sug_id"];
-        var option_ID=req["option_id"];
-        var comment=req["comment"];
+        var sugID=req.body.id;
+        var option_ID=req.body.selectedOption;
+        var comment=req.body.comment;
         Sug.findOne({ _id:sugID }).then(votedSug => {
             if (votedSug.status == true) {
                 if (!!option_ID && !comment) {  //option has no comment
