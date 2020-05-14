@@ -19,6 +19,7 @@ exports.sugView = async (req, res) => {
 
 exports.castingVote = (req, res) => {
     try {
+        console.log(req.body.id);
         var sugID=req.body.id;
         var option_ID=req.body.selectedOption;
         var comment=req.body.comment;
