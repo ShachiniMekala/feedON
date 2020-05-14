@@ -36,6 +36,7 @@ exports.castingVote = (req, res) => {
                             try {
                                 Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $set: { 'option.$.count': votedSug.option[i].count } }).then(result1 => {
                                     Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
+                                        console.log(result2);
                                         return res.status(200).send(result2);
                                     });
 
@@ -49,6 +50,7 @@ exports.castingVote = (req, res) => {
                 }
                 else if (!option_ID && !!comment) {//has comment no option
                     Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
+                        console.log(res3);
                         return res.status(200).send(res3);
                     }).catch(err => {
                         res(false);
@@ -65,6 +67,7 @@ exports.castingVote = (req, res) => {
                                     Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
 
                                         Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
+                                            console.log(res3);
                                             return res.status(200).send(res3);
                                         }).catch(err => {
                                             res(false);
