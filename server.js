@@ -38,7 +38,7 @@ http.listen(process.env.PORT, () => console.log("Server up and running"));
 //   })
 // });
 
-socketio.on("connection", (userSocket) => {
+/*socketio.on("connection", (userSocket) => {
   console.log("new device connected");
   userSocket.on("casted", (data) => {
     console.log(data);
@@ -54,5 +54,20 @@ socketio.on("connection", (userSocket) => {
       console.log(err);
     }
     );
+  });
+});*/
+
+socketio.on("connection", (userSocket) => {
+  console.log("new device connected");
+  userSocket.on("casted", (data) => {
+    //console.log(data["message"]);
+  
+    vote.castingVote(data,function(res){
+      if(res){
+          userSocket.broadcast.emit("updated_data",res);
+      } else {
+        console.log('Something went wrong!');
+      }
+    });
   });
 });
