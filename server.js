@@ -63,6 +63,7 @@ socketio.on("connection", (userSocket) => {
     //console.log(data["message"]);
   
     vote.castingVote(data,function(res){
+      console.log(res);
       if(res){
           userSocket.broadcast.emit("updated_data",res);
       } else {
