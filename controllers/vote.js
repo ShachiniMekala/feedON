@@ -42,7 +42,9 @@ exports.castingVote = (req, res) => {
 
                                 });
                             } catch (error) {
-                                return res.send(false);
+                                console.log(error);
+                                res(false);
+                                return;
                             }
                         }
                     }
@@ -52,7 +54,9 @@ exports.castingVote = (req, res) => {
                         console.log(res3);
                         return res.status(200).send(res3);
                     }).catch(err => {
-                        return res.send(false);
+                        console.log(err);
+                        res(false);
+                        return;
                     });
                 }
                 else {//has comment and option
@@ -65,11 +69,12 @@ exports.castingVote = (req, res) => {
                                     Sug.updateOne({ _id: sugID }, { $set: { "total": votedSug.total } }).then(result2 => {
 
                                         Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
-                                            console.log(res3);
+                                            console.log(res3)
                                             return res.status(200).send(res3);
                                         }).catch(err => {
-                                            return res.send(false);
-                                    
+                                            console.log(err);
+                                            res(false);
+                                            return;
                                         });
 
 
@@ -78,7 +83,9 @@ exports.castingVote = (req, res) => {
                                 });
             
                             } catch (error) {
-                                return res.send(false);
+                                console.log(error);
+                                res(false);
+                                return;
                             }
                         }
                     }
@@ -87,17 +94,23 @@ exports.castingVote = (req, res) => {
 
             }
             else {
-                return res.send(false);
+                console.log('Unknown else');
+                res(false);
+                return;
 
             }
 
         }).catch(err => {
-            return res.send(false);
+            console.log(err);
+            res(false);
+            return;
         });
 
 
     } catch (error) {
-        return res.send(false);
+        console.log(error);
+        res(false);
+        return;
     }
 
 }
