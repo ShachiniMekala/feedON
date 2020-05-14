@@ -42,8 +42,7 @@ exports.castingVote = (req, res) => {
 
                                 });
                             } catch (error) {
-                                res(false);
-                                return;
+                                return res.send(false);
                             }
                         }
                     }
@@ -53,8 +52,7 @@ exports.castingVote = (req, res) => {
                         console.log(res3);
                         return res.status(200).send(res3);
                     }).catch(err => {
-                        res(false);
-                        return;
+                        return res.send(false);
                     });
                 }
                 else {//has comment and option
@@ -70,8 +68,8 @@ exports.castingVote = (req, res) => {
                                             console.log(res3);
                                             return res.status(200).send(res3);
                                         }).catch(err => {
-                                            res(false);
-                                            return;
+                                            return res.send(false);
+                                    
                                         });
 
 
@@ -80,8 +78,7 @@ exports.castingVote = (req, res) => {
                                 });
             
                             } catch (error) {
-                                res(false);
-                                return;
+                                return res.send(false);
                             }
                         }
                     }
@@ -90,21 +87,17 @@ exports.castingVote = (req, res) => {
 
             }
             else {
-                res(false);
-                return;
+                return res.send(false);
 
             }
 
         }).catch(err => {
-            res(false);
-            return;
+            return res.send(false);
         });
 
 
     } catch (error) {
-        console.log(error);
-        res(false);
-        return;
+        return res.send(false);
     }
 
 }
