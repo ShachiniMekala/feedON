@@ -23,9 +23,9 @@ exports.castingVote = (req, res) => {
     console.log(req["comment"]);
     try {
         //console.log(req.body.id);
-        var sugID=req.body.id;
-        var option_ID=req.body.selectedOption;
-        var comment=req.body.comment;
+        var sugID=req["id"];
+        var option_ID=req["selectedOption"];
+        var comment=req["comment"];
         Sug.findOne({ _id:sugID }).then(votedSug => {
             if (votedSug.status == true) {
                 if (!!option_ID && !comment) {  //option has no comment
