@@ -41,6 +41,7 @@ http.listen(process.env.PORT, () => console.log("Server up and running"));
 socketio.on("connection", (userSocket) => {
   console.log("new device connected");
   userSocket.on("casted", (data) => {
+    console.log(data);
     //console.log(data["message"]);
     vote.castingVote(data,callback).then(ok=>{
       if(ok){
