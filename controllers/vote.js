@@ -18,9 +18,9 @@ exports.sugView = async (req, res) => {
 }
 
 exports.castingVote = (req, res) => {
-    console.log(req["id"]);
-    console.log(req["selectedOption"]);
-    console.log(req["comment"]);
+    // console.log(req["id"]);
+    // console.log(req["selectedOption"]);
+    // console.log(req["comment"]);
     try {
         //console.log(req.body.id);
         var sugID=req["id"];
@@ -35,7 +35,7 @@ exports.castingVote = (req, res) => {
                             // votedSug.total++;
                             try {
                                 Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count':1} }).then(result1 => {
-                                    Sug.updateOne({ _id: sugID }, { $inc: { "total": 1 } }).then(result2 => {
+                                    Sug.findOneAndUpdate({ _id: sugID }, { $inc: { "total": 1 } }).then(result2 => {
                                         //console.log(result2);
                                         return res(result2);
                                     });
@@ -68,7 +68,7 @@ exports.castingVote = (req, res) => {
                                 Sug.updateOne({ _id: sugID, "option._id": option_ID },{$inc: {'option.$.count': 1}}).then(result1 => {
                                     Sug.updateOne({ _id: sugID }, { $inc: { "total": 1 } }).then(result2 => {
 
-                                        Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
+                                        Sug.findOneAndUpdate({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
                                             // console.log(res3)
                                             return res(res3);
                                         }).catch(err => {
@@ -117,7 +117,7 @@ exports.castingVote = (req, res) => {
 
 
 //testing for trigger
-exports.castingVoteTest = (req, res) => {
+exports.castingVoteTest = async (req, res) => {
     try {
         //console.log(req.body.id);
         var sugID=req.body.id;
@@ -130,7 +130,7 @@ exports.castingVoteTest = (req, res) => {
                         if (option_ID == votedSug.option[i]._id) {
                             //votedSug.option[i].count++;
                             try {
-                                Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 } }).then(result1 => {
+                                Sug.findOneAndUpdate({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 } }).then(result1 => {
                                    return res.send(result1);
                                 });
                             } catch (error) {
@@ -147,7 +147,7 @@ exports.castingVoteTest = (req, res) => {
                             //votedSug.option[i].count++;
                             try {
                                 Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1} }).then(result1 => {
-                                        Sug.updateOne({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
+                                        Sug.findOneAndUpdate({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
                                             // console.log(res3)
                                             return res.send(res3);
                                         }).catch(err => {
