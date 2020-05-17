@@ -2,14 +2,14 @@ const Sug = require('../models/suggestion');
 
 exports.sugView = async (req, res) => {
     try {
-    
-        Sug.findOne({code: req.body.code }).then(allSug => {
+
+        Sug.findOne({ code: req.body.code }).then(allSug => {
             //console.log('helooooooooooooooooo' + allSug.status);
-            
-            if(allSug.status==false) return res.status(402).send('Session Already Closed');
-            
+
+            if (allSug.status == false) return res.status(402).send('Session Already Closed');
+
             return res.status(200).send(allSug);
-        }).catch(err=>{
+        }).catch(err => {
             return res.status(403).send('Suggestion not found');
         });
     } catch (err) {
@@ -23,29 +23,34 @@ exports.castingVote = (req, res) => {
     // console.log(req["comment"]);
     try {
         //console.log(req.body.id);
-        var sugID=req["id"];
-        var option_ID=req["selectedOption"];
-        var comment=req["comment"];
-        Sug.findOne({ _id:sugID }).then(votedSug => {
+        var sugID = req["id"];
+        var option_ID = req["selectedOption"];
+        var comment = req["comment"];
+        var cname = "Anonymous";
+        if (!!req["cname"]) {  //name of the commenter
+            cname = req["cname"];
+        }
+
+        Sug.findOne({ _id: sugID }).then(votedSug => {
             if (votedSug.status == true) {
                 if (!!option_ID && !comment) {  //option has no comment
                     for (var i = 0; i < votedSug.option.length; i++) {
                         if (option_ID == votedSug.option[i]._id) {
                             // votedSug.option[i].count++;
                             // votedSug.total++;
-                            try {
-                                Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count':1} }).then(result1 => {
-                                    Sug.findOneAndUpdate({ _id: sugID }, { $inc: { "total": 1 } }).then(result2 => {
-                                        //console.log(result2);
-                                        return res(result2);
-                                    });
 
+                            Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 } }).then(result1 => {
+                                Sug.findOneAndUpdate({ _id: sugID }, { $inc: { "total": 1 }},{new: true }).then(result2 => {
+                                    //console.log(result2);
+                                    return res(result2);
+                                }).catch(err => {
+                                    return res(false);
                                 });
-                            } catch (error) {
-                                //console.log(error);
+
+                            }).catch(err => {
                                 return res(false);
-                                
-                            }
+                            });
+
                         }
                     }
                 }
@@ -56,7 +61,7 @@ exports.castingVote = (req, res) => {
                 //     }).catch(err => {
                 //         // console.log(err);
                 //         return res(false);
-                        
+
                 //     });
                 // }
                 else {//has comment and option
@@ -64,29 +69,20 @@ exports.castingVote = (req, res) => {
                         if (option_ID == votedSug.option[i]._id) {
                             // votedSug.option[i].count++;
                             // votedSug.total++;
-                            try {
-                                Sug.updateOne({ _id: sugID, "option._id": option_ID },{$inc: {'option.$.count': 1}}).then(result1 => {
-                                    Sug.updateOne({ _id: sugID }, { $inc: { "total": 1 } }).then(result2 => {
 
-                                        Sug.findOneAndUpdate({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
-                                            // console.log(res3)
-                                            return res(res3);
-                                        }).catch(err => {
-                                            // console.log(err);
-                                            return res(false);
-                                           
-                                        });
+                            Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 } }).then(result1 => {
+                                Sug.findByIdAndUpdate({ _id: sugID }, { $inc: { "total": 1 },$push: { comments:{'name':cname,'comment':comment} } },{new: true}).then(result2 => {
+                                    return res(result2);
 
-
-                                    });
-
+                                }).catch(err => {
+                                    return res(false);
                                 });
-            
-                            } catch (error) {
-                                //console.log(error);
+
+
+                            }).catch(err => {
                                 return res(false);
-                               
-                            }
+                            });
+
                         }
                     }
 
@@ -94,9 +90,9 @@ exports.castingVote = (req, res) => {
 
             }
             else {
-                // console.log('Unknown else');
+                // console.log('Sug Closed');
                 return res(false);
-        
+
 
             }
 
@@ -109,7 +105,7 @@ exports.castingVote = (req, res) => {
     } catch (error) {
         // console.log(error);
         return res(false);
-        
+
     }
 
 }
@@ -120,24 +116,31 @@ exports.castingVote = (req, res) => {
 exports.castingVoteTest = async (req, res) => {
     try {
         //console.log(req.body.id);
-        var sugID=req.body.id;
-        var option_ID=req.body.selectedOption;
-        var comment=req.body.comment;
-        Sug.findOne({ _id:sugID }).then(votedSug => {
+        var sugID = req.body.id;
+        var option_ID = req.body.selectedOption;
+        var comment = req.body.comment;
+        var cname="Anonymous";
+        if(!!req.body.cname){
+        cname=req.body.cname;
+        }
+        Sug.findOne({ _id: sugID }).then(votedSug => {
             if (votedSug.status == true) {
                 if (!!option_ID && !comment) {  //option has no comment
                     for (var i = 0; i < votedSug.option.length; i++) {
                         if (option_ID == votedSug.option[i]._id) {
                             //votedSug.option[i].count++;
-                            try {
-                                Sug.findOneAndUpdate({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 } }).then(result1 => {
-                                   return res.send(result1);
+                            Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 }},{new: true}).then(result1 => {
+                                Sug.findOneAndUpdate({ _id: sugID }, { $inc: { "total": 1 } },{new: true}).then(result2 => {
+                                    //console.log(result2);
+                                    return res.send(result2);
+                                }).catch(err => {
+                                    return res.send(false);
                                 });
-                            } catch (error) {
-                                //console.log(error);
-                                return res.send(error);
-                                
-                            }
+
+                            }).catch(err => {
+                                return res.send(false);
+                            });
+
                         }
                     }
                 }
@@ -145,24 +148,19 @@ exports.castingVoteTest = async (req, res) => {
                     for (var i = 0; i < votedSug.option.length; i++) {
                         if (option_ID == votedSug.option[i]._id) {
                             //votedSug.option[i].count++;
-                            try {
-                                Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1} }).then(result1 => {
-                                        Sug.findOneAndUpdate({ _id: sugID }, { $push: { comments: comment } }).then(res3 => {
-                                            // console.log(res3)
-                                            return res.send(res3);
-                                        }).catch(err => {
-                                            // console.log(err);
-                                            return res.send(err);
-                                           
-                                        });
+                            Sug.updateOne({ _id: sugID, "option._id": option_ID }, { $inc: { 'option.$.count': 1 } }).then(result1 => {
+                                Sug.findByIdAndUpdate({ _id: sugID }, { $inc: { "total": 1 },$push: { comments:{'name':cname,'comment':comment} } },{new: true}).then(result2=>{
+                                    res.send(result2);
+                                }).catch(err=>{
+                                    console.log(err);
+                                    return res.send(false);
+                                })
 
-                                });
-            
-                            } catch (error) {
-                                //console.log(error);
-                                return res.send(error);
-                               
-                            }
+
+                            }).catch(err => {
+                                console.log(err);
+                                return res.send(false);
+                            });
                         }
                     }
 
@@ -170,9 +168,9 @@ exports.castingVoteTest = async (req, res) => {
 
             }
             else {
-                console.log('Unknown else');
-               // return res.send('Unknown');
-        
+                console.log('Sug Closed');
+                // return res.send('Unknown');
+
 
             }
 
@@ -185,7 +183,7 @@ exports.castingVoteTest = async (req, res) => {
     } catch (error) {
         // console.log(error);
         return res.send(error);
-        
+
     }
 
 }

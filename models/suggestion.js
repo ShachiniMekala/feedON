@@ -21,7 +21,14 @@ const sugSchema = new mongoose.Schema({
             type :Number
         }    
     }],
-    comments:[String],
+    comments:[{
+        name:{
+            type:String
+        },
+        comment:{
+            type :String
+        } 
+    }],
     total:{
         type:Number,
         required:true

@@ -3,9 +3,11 @@ const generator = require('generate-password');
 
 exports.sugRegister = async (req, res) => {
     var optionName = [];
+    //var comments=[];
     for (var i = 0; i < req.body.option.length; i++) {
         optionName.push({ name: req.body.option[i], count: 0 });
     }
+        //comments.push({ name: null, comment:null});
     const sug = new Sug({
         user_id: req.body.user_id,
         suggestion: req.body.suggestion,
@@ -17,7 +19,8 @@ exports.sugRegister = async (req, res) => {
             uppercase:true
         }),
         option: optionName,
-        total: 0
+        total: 0,
+        //comments:comments
     });
 
     try {
@@ -64,6 +67,14 @@ exports.loadHistory = async (req, res) => {
         res.status(200).send(result);
     }).catch(err => {
         res.status(400).send('Previous records not found');
+    });
+}
+
+exports.activeSug=async (req,res)=>{
+    Sug.find({ user_id: req.body.user_id, status: true }).then(result => {
+        res.status(200).send(result);
+    }).catch(err => {
+        res.status(400).send('No active suggestions found');
     });
 }
 
