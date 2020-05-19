@@ -65,6 +65,7 @@ socketio.on("connection", (userSocket) => {
     vote.castingVote(data,function(res){
       console.log(res);
       if(res){
+          console.log(res);
           socketio.emit("updated_data",res);
       } else {
         console.log('Something went wrong!');
