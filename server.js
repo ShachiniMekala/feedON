@@ -59,14 +59,17 @@ http.listen(process.env.PORT, () => console.log("Server up and running"));
 
 socketio.on("connection", (userSocket) => {
   console.log("new device connected");
+  
   userSocket.on("casted", (data) => {
     //console.log(data["message"]);
-  
+    console.log(data["id"]);//displays message
+    userSocket.join(data["id"]);
     vote.castingVote(data,function(res){
       console.log(res);
       if(res){
           console.log(res);
-          socketio.emit("updated_data",res);
+          userSocket.emit('sucess_msg','Sucessfully Recorded Your Response');
+          socketio.to(data["id"]).emit("updated_data",res);
       } else {
         console.log('Something went wrong!');
       }
