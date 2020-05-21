@@ -78,4 +78,14 @@ exports.activeSug=async (req,res)=>{
     });
 }
 
+exports.sugDelete = async (req, res) => {
+    Sug.findOneAndDelete({ _id: req.body.sug_id}).then(ok => {
+        console.log(ok);
+        res.status(200).send('Sucessfully Deleted');
+    }).catch(err => {
+        console.log(err);
+        res.status(400).send(err); 
+    });;
+}
+
 
