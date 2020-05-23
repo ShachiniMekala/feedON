@@ -27,9 +27,9 @@ exports.signUp = async (req, res) => {
         //console.log('Registering');
         const savedUser = await user.save();
         //console.log('Registered');
-        res.send(savedUser);
+        res.status(200).send(savedUser);
     } catch (err) {
-        res.status(400).send(err);
+        res.status(401).send(err);
     }
 }
 
@@ -43,7 +43,7 @@ exports.userLogin = async (req, res) => {
     if (!pwdvalid) return res.status(400).send('Invalid Password');
 
     const token = jwt.sign({ _id: userExists._id, name: userExists.name, email: userExists.email }, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).send(token);
+    res.header('auth-token', token).status(200).send(token);
 
 }
 
@@ -121,7 +121,7 @@ exports.forgotPassword = async (req, res) => {
         User.updateOne({ email: req.body.email }, { $set: { 'OTP': OTP, 'expiresIn': expiresIn } }).then(result => {
             return res.status(200).send('Email sent! Check your email');
         }).catch(err => {
-            return res.status(400).send(err);
+            return res.status(401).send(err);
         });
         
 
@@ -138,7 +138,7 @@ exports.OTPLogin = async (req, res) => {
     if ((await bcrypt.compare(req.body.otp, userExists.OTP)) && (userExists.expiresIn >= Date.now())) {
         // console.log('its ok');
         const token = jwt.sign({ _id: userExists._id, name: userExists.name, email: userExists.email }, process.env.TOKEN_SECRET);
-        return res.header('auth-token', token).send(token);
+        return res.header('auth-token', token).status(200).send(token);
     }
     return res.status(400).send('Timeout or incorrect password');
 
@@ -150,9 +150,9 @@ exports.editPassword = async (req, res) => {
 
     User.updateOne({ email: req.body.email }, { $set: { 'password': hashedPasword } }).then(result => {
         //console.log(result);
-        return res.status(400).send('Sucessfuly updated');
+        return res.status(200).send('Sucessfuly updated');
     }).catch(err => {
         //console.log(err);
-        return res.status(400).send(err);
+        return res.status(401).send(err);
     });
 }

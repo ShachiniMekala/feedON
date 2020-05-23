@@ -10,10 +10,10 @@ exports.sugView = async (req, res) => {
 
             return res.status(200).send(allSug);
         }).catch(err => {
-            return res.status(403).send('Suggestion not found');
+            return res.status(400).send('Suggestion not found');
         });
     } catch (err) {
-        return res.status(400).send(err);
+        return res.status(401).send(err);
     }
 }
 

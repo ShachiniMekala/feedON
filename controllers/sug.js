@@ -27,9 +27,9 @@ exports.sugRegister = async (req, res) => {
         console.log(optionName);
         const savedSug = await sug.save();
         console.log('Registered');
-        res.send(savedSug);
+        res.status(200).send(savedSug);
     } catch (err) {
-        res.status(400).send(err);
+        res.status(401).send(err);
     }
 }
 
@@ -46,7 +46,7 @@ exports.sugClose = (req, res) => {
                     //console.log(ok);
                     res.status(200).send('successfully updated');
                 }).catch(err => {
-                    res.status(402).send(err);
+                    res.status(401).send(err);
                 });;
 
             }
@@ -57,7 +57,7 @@ exports.sugClose = (req, res) => {
             res.status(401).send(err);//count error
         });
     }).catch(err => {
-        res.status(400).send(err);
+        res.status(401).send(err);
     });
 
 }
@@ -66,7 +66,7 @@ exports.loadHistory = async (req, res) => {
     Sug.find({ user_id: req.body.user_id, status: false }).sort({ 'date': -1 }).then(result => {
         res.status(200).send(result);
     }).catch(err => {
-        res.status(400).send('Previous records not found');
+        res.status(401).send('Previous records not found');
     });
 }
 
@@ -74,7 +74,7 @@ exports.activeSug=async (req,res)=>{
     Sug.find({ user_id: req.body.user_id, status: true }).then(result => {
         res.status(200).send(result);
     }).catch(err => {
-        res.status(400).send('No active suggestions found');
+        res.status(401).send('No active suggestions found');
     });
 }
 
@@ -84,7 +84,7 @@ exports.sugDelete = async (req, res) => {
         res.status(200).send('Sucessfully Deleted');
     }).catch(err => {
         console.log(err);
-        res.status(400).send(err); 
+        res.status(401).send(err); 
     });;
 }
 
