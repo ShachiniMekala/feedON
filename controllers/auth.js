@@ -27,7 +27,8 @@ exports.signUp = async (req, res) => {
         //console.log('Registering');
         const savedUser = await user.save();
         //console.log('Registered');
-        res.status(200).send(savedUser);
+        const token = jwt.sign({ _id: savedUser._id, name: savedUser.name, email: savedUser.email }, process.env.TOKEN_SECRET);
+        res.status(200).send(token);
     } catch (err) {
         res.status(401).send(err);
     }
