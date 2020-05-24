@@ -60,9 +60,16 @@ http.listen(process.env.PORT, () => console.log("Server up and running"));
 socketio.on("connection", (userSocket) => {
   console.log("new device connected");
   
+  //for sug registering
+  userSocket.on("new_sug", (sug) => {
+    //console.log(data["message"]);
+    console.log(sug["_id"]);//displays id
+    userSocket.join(sug["_id"]);
+  });
+
   userSocket.on("casted", (data) => {
     //console.log(data["message"]);
-    console.log(data["id"]);//displays message
+    console.log(data["id"]);//displays id
     userSocket.join(data["id"]);
     vote.castingVote(data,function(res){
       console.log(res);
