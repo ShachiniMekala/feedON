@@ -21,7 +21,7 @@
     "mongoose": "^5.9.10",
     "nodemailer": "^6.4.6",
     "nodemailer-express-handlebars": "^4.0.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
